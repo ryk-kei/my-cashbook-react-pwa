@@ -17,7 +17,7 @@ export default defineConfig({
         name: "My Cashbook PMA",
         short_name: "Cashbook",
         description: "test app",
-        start_url: `/${repoName}/`,
+        start_url: "./",
         display: "standalone",
         background_color: "#000000",
         theme_color: "#ffffff",
