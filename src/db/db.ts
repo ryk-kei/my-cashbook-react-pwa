@@ -145,3 +145,37 @@ export function getEntryById(id: number): Promise<CashBookProps | undefined> {
     });
   });
 }
+
+/**
+ * データを一括削除／登録する
+ * @param {*} entries 追加するデータ
+ * @returns
+ */
+export function bulkDeleteInsertEntry(
+  entries: Omit<CashBookProps, "id">[],
+): Promise<void> {
+  return openDatabase().then((db) => {
+    return new Promise((resolve, reject) => {
+      /** トランザクション (書き込み) */
+      const transaction = db.transaction(storeName, "readwrite");
+      /** 対象のオブジェクトストア */
+      const store = transaction.objectStore(storeName);
+
+      // トランザクションイベントで成否を管理
+      transaction.oncomplete = () => resolve();
+      transaction.onerror = () => reject(transaction.error);
+      transaction.onabort = () => reject(transaction.error);
+
+      // 全削除
+      store.clear();
+
+      // 追加
+      for (const entry of entries) {
+        const req = store.add(entry);
+        req.onerror = (event) => {
+          console.error("add error:", (event.target as IDBRequest).error);
+        };
+      }
+    });
+  });
+}

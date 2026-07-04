@@ -1,5 +1,5 @@
 import type { CashBookProps } from "../types/cashbook";
-import { getEntries, saveEntry } from "./db";
+import { getEntries, saveEntry, bulkDeleteInsertEntry } from "./db";
 
 // JSONエクスポートボタン押下
 export const exportJson = async () => {
@@ -86,24 +86,23 @@ export const importFile = (files: File[]): void => {
 const importCsv = (e: ProgressEvent<FileReader>): void => {
   const content = (e.target as FileReader).result as string;
   const rows = content.split("\n").map((row) => row.split(","));
-  const entries: CashBookProps[] = rows.slice(1).map((row) => ({
-    id: 0,
+  const entries: Omit<CashBookProps, "id">[] = rows.slice(1).map((row) => ({
     date: new Date(row[0]),
     item: row[1],
     amount: Number(row[2]),
     isIncome: row[3] === "true",
   }));
 
-  Promise.all(
-    entries.map((entry) => {
-      const { id, ...withoutId } = entry;
-      return saveEntry(withoutId);
-    }),
-  )
+  bulkDeleteInsertEntry(entries)
     .then(() => {
       alert("CSVデータのインポートが完了しました！");
     })
-    .catch((error) => console.error("CSVインポート中にエラー:", error));
+    .catch((error) => {
+      alert(
+        "CSVインポート中にエラーが発生しました。処理はロールバックされました。",
+      );
+      console.error("CSVインポート中にエラー:", error);
+    });
 };
 
 const importJson = (e: ProgressEvent<FileReader>): void => {
