@@ -68,7 +68,7 @@ const CalendarDialog = () => {
 
   const dateSort = (arr: CashBookProps[]) => {
     return arr.sort(
-      (a, b) => b.date.getTime() - a.date.getTime() || b.id - a.id,
+      (a, b) => a.date.getTime() - b.date.getTime() || a.id - b.id,
     );
   };
   const sortedList = useMemo(() => dateSort([...cashbookList]), [cashbookList]);
