@@ -16,13 +16,26 @@ import { formatCurrency, formatYmd, getSignedAmount } from "../comFunc";
 
 const getCashbook = await getEntries();
 
+/**
+ * 任意の月開始日を基準に、指定年月の範囲でフィルタする
+ *
+ * @param selectedDate 指定年月
+ * @param all 検索対象
+ * @returns 検索結果
+ */
 const filterCashBookByMonth = (selectedDate: Date, all: CashBookProps[]) => {
+  // 月の開始日
+  const START_DATE = 10;
+  const year = selectedDate.getFullYear();
+  const month = selectedDate.getMonth();
+
   // 日付範囲検索
-  return all.filter(
-    (x) =>
-      x.date.getFullYear() == selectedDate.getFullYear() &&
-      x.date.getMonth() == selectedDate.getMonth(),
-  );
+  // 範囲開始：対象年月の START_DAY
+  const rangeStart = new Date(year, month, START_DATE);
+  // 範囲終了：翌月の START_DAY - 1
+  const rangeEnd = new Date(year, month + 1, START_DATE - 1);
+
+  return all.filter((x) => rangeStart <= x.date && x.date <= rangeEnd);
 };
 
 const CalendarDialog = () => {
