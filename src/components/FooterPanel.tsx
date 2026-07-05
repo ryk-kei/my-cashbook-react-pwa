@@ -13,6 +13,7 @@ import type { CashBookProps } from "../types/cashbook";
 import { IODialog } from "./io/IODialog";
 import { SearchDialog } from "./search/SearchDialog";
 import CalendarDialog from "./calendar/CalendarDialog";
+import { useState } from "react";
 
 const defaultCashBook: CashBookProps = {
   id: 0,
@@ -34,6 +35,7 @@ type Props = {
 
 const FooterPanel = (props: Props) => {
   const { onHome, onSearch, onEntry, onEdit } = props;
+  const [open, setOpen] = useState(false);
 
   return (
     <>
@@ -44,13 +46,17 @@ const FooterPanel = (props: Props) => {
           </IconButton>
 
           {/* カレンダーダイアログ */}
-          <Dialog.Root size="full">
+          <Dialog.Root
+            open={open}
+            onOpenChange={(details) => setOpen(details.open)}
+            size="full"
+          >
             <Dialog.Trigger asChild>
               <IconButton aria-label="月表示">
                 <MdCalendarMonth />
               </IconButton>
             </Dialog.Trigger>
-            <CalendarDialog />
+            <CalendarDialog open={open} />
           </Dialog.Root>
 
           {/* 検索ダイアログ */}

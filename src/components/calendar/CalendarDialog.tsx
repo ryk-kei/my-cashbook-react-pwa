@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Box,
   Card,
@@ -14,7 +14,7 @@ import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import MonthPicker from "./MonthPicker";
 import { formatCurrency, formatYmd, getSignedAmount } from "../comFunc";
 
-const getCashbook = await getEntries();
+let getCashbook: CashBookProps[];
 
 /**
  * 任意の月開始日を基準に、指定年月の範囲でフィルタする
@@ -38,13 +38,38 @@ const filterCashBookByMonth = (selectedDate: Date, all: CashBookProps[]) => {
   return all.filter((x) => rangeStart <= x.date && x.date <= rangeEnd);
 };
 
-const CalendarDialog = () => {
-  const [cashbookList, setCashbookList] = useState<CashBookProps[]>([]);
+const getMonthByCustomStartDate = (date: Date): Date => {
+  // 月の開始日
+  const START_DATE = 10;
+  const month = date.getMonth();
+  const reMonth = date.getDate() < START_DATE ? month - 1 : month;
+  return new Date(date.getFullYear(), reMonth, date.getDate());
+};
 
-  const [month, setMonth] = useState(new Date());
+type Props = {
+  open: boolean;
+};
+
+const CalendarDialog = (props: Props) => {
+  const [cashbookList, setCashbookList] = useState<CashBookProps[]>([]);
+  const [month, setMonth] = useState(() => {
+    return getMonthByCustomStartDate(new Date());
+  });
+
+  useEffect(() => {
+    if (!props.open) return;
+
+    (async () => {
+      getCashbook = await getEntries();
+      const filtered = filterCashBookByMonth(month, getCashbook);
+      setCashbookList(filtered);
+    })();
+  }, [props.open, month]);
+
   const handleChange = (month: Date) => {
     setMonth(month);
-    setCashbookList(filterCashBookByMonth(month, getCashbook));
+    const filtered = filterCashBookByMonth(month, getCashbook);
+    setCashbookList(filtered);
   };
 
   const shiftMonth = (base: Date, diff: number) => {
