@@ -1,9 +1,9 @@
-import type { CashBookProps } from "../types/cashbook";
+import type { ItemDictionary } from "../types/itemdictionary";
 
 /** indexedDBのデータベース名 */
 const dbName = "cashbookApp";
 /** indexedDBのオブジェクトストア(テーブル)名 */
-const storeName = "entries";
+const storeName = "item_dictionary";
 
 const dbVersion = 2;
 
@@ -40,7 +40,7 @@ function openDatabase(): Promise<IDBDatabase> {
  * データを取得する
  * @returns
  */
-export function getEntries(): Promise<CashBookProps[]> {
+export function getEntries(): Promise<ItemDictionary[]> {
   return openDatabase().then((db) => {
     return new Promise((resolve, reject) => {
       /** トランザクション (読み取り専用) */
@@ -52,7 +52,7 @@ export function getEntries(): Promise<CashBookProps[]> {
 
       // 取得できた
       request.onsuccess = (event) => {
-        resolve((event.target as IDBRequest<CashBookProps[]>).result);
+        resolve((event.target as IDBRequest<ItemDictionary[]>).result);
       };
       // 取得できない
       request.onerror = (event) => {
@@ -67,7 +67,7 @@ export function getEntries(): Promise<CashBookProps[]> {
  * @param {*} entry 追加するデータ
  * @returns
  */
-export function saveEntry(entry: Omit<CashBookProps, "id">): Promise<void> {
+export function saveEntry(entry: Omit<ItemDictionary, "id">): Promise<void> {
   return openDatabase().then((db) => {
     return new Promise((resolve, reject) => {
       /** トランザクション (書き込み) */
@@ -92,7 +92,7 @@ export function saveEntry(entry: Omit<CashBookProps, "id">): Promise<void> {
  */
 export function updateEntry(
   id: number,
-  updatedData: Omit<CashBookProps, "id">,
+  updatedData: Omit<ItemDictionary, "id">,
 ): Promise<void> {
   return openDatabase().then((db) => {
     return new Promise((resolve, reject) => {
@@ -129,7 +129,7 @@ export function deleteEntry(id: number): Promise<void> {
  * @param {*} id
  * @returns
  */
-export function getEntryById(id: number): Promise<CashBookProps | undefined> {
+export function getEntryById(id: number): Promise<ItemDictionary | undefined> {
   return openDatabase().then((db) => {
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(storeName, "readonly");
@@ -137,7 +137,7 @@ export function getEntryById(id: number): Promise<CashBookProps | undefined> {
       const request = store.get(id);
 
       request.onsuccess = (event) => {
-        resolve((event.target as IDBRequest<CashBookProps>).result);
+        resolve((event.target as IDBRequest<ItemDictionary>).result);
       };
       request.onerror = (event) => {
         reject((event.target as IDBRequest).error);
@@ -152,7 +152,7 @@ export function getEntryById(id: number): Promise<CashBookProps | undefined> {
  * @returns
  */
 export function bulkDeleteInsertEntry(
-  entries: Omit<CashBookProps, "id">[],
+  entries: Omit<ItemDictionary, "id">[],
 ): Promise<void> {
   return openDatabase().then((db) => {
     return new Promise((resolve, reject) => {

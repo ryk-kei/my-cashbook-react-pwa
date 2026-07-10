@@ -3,6 +3,7 @@ import ExportCsvButton from "./ExportCsvButton";
 import ImportKozukaiButton from "./ImportKozukaiButton";
 import ExportJsonButton from "./ExportJsonButton";
 import ImportButton from "./ImportButton";
+import ImportDictionaryButton from "./ImportDictionaryButton";
 
 export const IODialog = () => {
   return (
@@ -26,6 +27,7 @@ export const IODialog = () => {
               <Dialog.Title fontSize={"sm"}>Import</Dialog.Title>
               <ImportButton />
               <ImportKozukaiButton />
+              <ImportDictionaryButton />
             </Flex>
           </Dialog.Body>
 
