@@ -35,7 +35,9 @@ const importCsv = (e: ProgressEvent<FileReader>): void => {
     })
     .catch((error) => {
       alert(
-        "CSVインポート中にエラーが発生しました。処理はロールバックされました。",
+        "CSVインポート中にエラーが発生しました。処理はロールバックされました。" +
+          "\n" +
+          error,
       );
       console.error("CSVインポート中にエラー:", error);
     });
