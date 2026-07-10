@@ -24,7 +24,7 @@ export const importFile = (files: File[]): void => {
 
 const importCsv = (e: ProgressEvent<FileReader>): void => {
   const content = (e.target as FileReader).result as string;
-  const rows = content.split("\n").map((row) => row.split(","));
+  const rows = content.split(/\r?\n/).map((row) => row.split(","));
   const entries: Omit<ItemDictionary, "id">[] = rows.slice(1).map((row) => ({
     name: row[0],
   }));
