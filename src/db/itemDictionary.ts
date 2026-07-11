@@ -1,11 +1,11 @@
 import type { ItemDictionary } from "../types/itemdictionary";
 
 /** indexedDBのデータベース名 */
-const dbName = "cashbookApp";
+const dbName = "cashbookApp_v2";
 /** indexedDBのオブジェクトストア(テーブル)名 */
 const storeName = "item_dictionary";
 
-const dbVersion = 2;
+const dbVersion = 1;
 
 /**
  * データベースを開く
