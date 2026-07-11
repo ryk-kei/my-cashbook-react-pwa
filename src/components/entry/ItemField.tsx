@@ -72,7 +72,7 @@ const ItemField = ({ item, onChange, readOnly }: Props) => {
             <Popover.Body>
               <Select.Root
                 collection={createListCollection({ items: filtered })}
-                size="sm"
+                size="lg"
                 positioning={{ sameWidth: true, placement: "bottom" }}
                 onSelect={(details) => {
                   setQuery(details.value);
